@@ -1,0 +1,14 @@
+{
+  "name": "git-branch",
+  "version": "0.1.0",
+  "description": "The current git branch, always visible in the prompt footer.",
+  "author": {
+    "name": "Turing0x",
+    "url": "https://github.com/Turing0x"
+  },
+  "homepage": "https://github.com/Turing0x/empowering_claude",
+  "repository": "https://github.com/Turing0x/empowering_claude",
+  "license": "MIT",
+  "keywords": ["git", "branch", "status", "footer", "mod"],
+  "types": "./types/index.d.ts"
+}

@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# orchestrator workers
+.claude/work/
+
+# wrangler
+.wrangler/

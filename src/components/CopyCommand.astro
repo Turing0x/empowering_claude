@@ -1,0 +1,106 @@
+---
+interface Props {
+	command: string;
+	label?: string;
+	class?: string;
+}
+
+const { command, label = 'Copy command', class: className = '' } = Astro.props;
+---
+
+<div
+	class:list={[
+		'flex min-w-0 items-stretch gap-0 rounded-lg border border-line bg-term-bg font-mono text-sm text-term-fg',
+		className,
+	]}
+>
+	<code class="min-w-0 flex-1 overflow-x-auto whitespace-nowrap px-4 py-3 [scrollbar-width:thin]" tabindex="0"
+		><span class="select-none text-term-dim" aria-hidden="true">$ </span><span data-copy-text>{command}</span></code
+	>
+	<button
+		type="button"
+		data-copy
+		class="relative shrink-0 cursor-pointer rounded-r-lg border-l border-term-line px-4 text-term-fg transition-colors hover:bg-term-line focus-visible:bg-term-line"
+		aria-label={`${label}: ${command}`}
+	>
+		<span data-copy-idle class="inline-flex items-center gap-2">
+			<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+				<rect x="5.5" y="5.5" width="8" height="8" rx="1.5"></rect>
+				<path d="M10.5 3.5v-.5A1.5 1.5 0 0 0 9 1.5H3A1.5 1.5 0 0 0 1.5 3v6A1.5 1.5 0 0 0 3 10.5h.5"></path>
+			</svg>
+			Copy
+		</span>
+		<span data-copy-done hidden class="inline-flex items-center gap-2 text-term-green">
+			<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path d="m3 8.5 3.2 3L13 4.5"></path>
+			</svg>
+			Copied
+		</span>
+		<span data-copy-fail hidden class="inline-flex items-center gap-2 text-[#ff9b8a]">
+			<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path d="m4 4 8 8M12 4l-8 8"></path>
+			</svg>
+			Copy failed
+		</span>
+	</button>
+	<span class="sr-only" role="status" aria-live="polite" data-copy-status></span>
+</div>
+
+<script>
+	function fallbackCopy(text: string): boolean {
+		const previous = document.activeElement as HTMLElement | null;
+		const area = document.createElement('textarea');
+		area.value = text;
+		area.setAttribute('readonly', '');
+		area.style.position = 'fixed';
+		area.style.opacity = '0';
+		document.body.appendChild(area);
+		area.focus();
+		area.select();
+		let ok = false;
+		try {
+			ok = document.execCommand('copy');
+		} catch {
+			ok = false;
+		}
+		area.remove();
+		previous?.focus();
+		return ok;
+	}
+
+	async function copy(text: string): Promise<boolean> {
+		if (navigator.clipboard && window.isSecureContext) {
+			try {
+				await navigator.clipboard.writeText(text);
+				return true;
+			} catch {
+				/* fall through */
+			}
+		}
+		return fallbackCopy(text);
+	}
+
+	document.querySelectorAll<HTMLButtonElement>('button[data-copy]').forEach((btn) => {
+		let timer: number | undefined;
+		btn.addEventListener('click', async () => {
+			const text = btn.parentElement?.querySelector('[data-copy-text]')?.textContent ?? '';
+			const ok = await copy(text);
+			const idle = btn.querySelector<HTMLElement>('[data-copy-idle]');
+			const done = btn.querySelector<HTMLElement>('[data-copy-done]');
+			const fail = btn.querySelector<HTMLElement>('[data-copy-fail]');
+			const status = btn.parentElement?.querySelector<HTMLElement>('[data-copy-status]');
+			if (!idle || !done || !fail || !status) return;
+			idle.hidden = true;
+			done.hidden = !ok;
+			fail.hidden = ok;
+			status.textContent = ok ? 'Copied to clipboard' : 'Copy failed, select the command manually';
+			window.clearTimeout(timer);
+			timer = window.setTimeout(() => {
+				idle.hidden = false;
+				done.hidden = true;
+				fail.hidden = true;
+				status.textContent = '';
+			}, 2000);
+		});
+	});
+</script>

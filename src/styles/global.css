@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* Design tokens. Dark is the default; light follows prefers-color-scheme. */
+:root {
+	color-scheme: dark light;
+	--bg: #14110f;
+	--surface: #1c1815;
+	--surface-2: #25201c;
+	--line: #3a332d;
+	--fg: #efe8de;
+	--muted: #aca294;
+	--accent: #f0996a;
+	--on-accent: #1a120d;
+	--glow: rgba(240, 153, 106, 0.14);
+	/* The terminal mock stays dark in both schemes, like a real terminal. */
+	--term-bg: #0d0b0a;
+	--term-fg: #e6dfd5;
+	--term-dim: #9a9084;
+	--term-line: #3a332d;
+	--term-green: #5fd38d;
+	--term-accent: #f0996a;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--bg: #faf6f0;
+		--surface: #fffdf9;
+		--surface-2: #f1eae0;
+		--line: #ddd2c3;
+		--fg: #1f1a16;
+		--muted: #655c52;
+		--accent: #a8481a;
+		--on-accent: #ffffff;
+		--glow: rgba(168, 72, 26, 0.1);
+	}
+}
+
+@theme inline {
+	--color-bg: var(--bg);
+	--color-surface: var(--surface);
+	--color-surface-2: var(--surface-2);
+	--color-line: var(--line);
+	--color-fg: var(--fg);
+	--color-muted: var(--muted);
+	--color-accent: var(--accent);
+	--color-on-accent: var(--on-accent);
+	--color-term-bg: var(--term-bg);
+	--color-term-fg: var(--term-fg);
+	--color-term-dim: var(--term-dim);
+	--color-term-line: var(--term-line);
+	--color-term-green: var(--term-green);
+	--color-term-accent: var(--term-accent);
+	--font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+	html {
+		background: var(--bg);
+		scroll-behavior: smooth;
+		-webkit-text-size-adjust: 100%;
+	}
+	body {
+		background: var(--bg);
+		color: var(--fg);
+		font-family: var(--font-sans);
+		line-height: 1.6;
+	}
+	:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 3px;
+		border-radius: 4px;
+	}
+	::selection {
+		background: var(--accent);
+		color: var(--on-accent);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation: none !important;
+			transition: none !important;
+		}
+	}
+}

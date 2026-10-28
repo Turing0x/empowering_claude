@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "ask": [
+      "Edit(./.env*)",
+      "Edit(./package.json)",
+      "Edit(./pnpm-lock.yaml)",
+      "Edit(./astro.config.mjs)"
+    ],
+    "deny": [
+      "Read(./.env*)"
+    ]
+  }
+}

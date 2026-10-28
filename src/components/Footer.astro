@@ -1,0 +1,19 @@
+---
+import { AUTHOR, REPO_URL } from '../data/plugins';
+---
+
+<footer class="border-t border-line">
+	<div class="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+		<p class="m-0">
+			<a href={REPO_URL} target="_blank" rel="noopener noreferrer" class="text-fg underline underline-offset-4 hover:text-accent"
+				>Source on GitHub<span class="sr-only"> (opens in a new tab)</span></a
+			>
+			<span aria-hidden="true"> · </span>MIT license
+		</p>
+		<p class="m-0">
+			Made by <a href={AUTHOR.url} target="_blank" rel="noopener noreferrer" class="text-fg underline underline-offset-4 hover:text-accent"
+				>{AUTHOR.name}<span class="sr-only"> (opens in a new tab)</span></a
+			>
+		</p>
+	</div>
+</footer>

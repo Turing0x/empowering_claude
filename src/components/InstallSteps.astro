@@ -1,0 +1,40 @@
+---
+import { AUTOUPDATE_PATH, MARKETPLACE_CMD, plugins } from '../data/plugins';
+import CopyCommand from './CopyCommand.astro';
+
+const example = plugins[0];
+---
+
+<section id="install" aria-labelledby="install-title" class="scroll-mt-8">
+	<h2 id="install-title" class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">How to install</h2>
+	<p class="mt-3 max-w-2xl text-muted">Three steps, all inside Claude Code.</p>
+
+	<ol class="mt-8 grid grid-cols-[minmax(0,1fr)] gap-4 p-0 lg:grid-cols-[repeat(3,minmax(0,1fr))]">
+		<li class="flex min-w-0 list-none flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
+			<div>
+				<span class="font-mono text-sm text-accent">01</span>
+				<h3 class="mt-1 font-display text-xl font-semibold">Add the marketplace</h3>
+				<p class="mt-2 text-sm text-muted">Register Empowering Claude as a plugin source. You only do this once.</p>
+			</div>
+			<CopyCommand class="mt-auto" command={MARKETPLACE_CMD} label="Copy marketplace command" />
+		</li>
+		<li class="flex min-w-0 list-none flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
+			<div>
+				<span class="font-mono text-sm text-accent">02</span>
+				<h3 class="mt-1 font-display text-xl font-semibold">Install a plugin</h3>
+				<p class="mt-2 text-sm text-muted">Pick any plugin from the list above. The command is always <code class="font-mono text-xs break-all">name@empowering-claude</code>.</p>
+			</div>
+			{example && <CopyCommand class="mt-auto" command={example.installCmd} label={`Copy install command for ${example.name}`} />}
+		</li>
+		<li class="flex min-w-0 list-none flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
+			<div>
+				<span class="font-mono text-sm text-accent">03 <span class="text-muted">· optional</span></span>
+				<h3 class="mt-1 font-display text-xl font-semibold">Turn on auto-update</h3>
+				<p class="mt-2 text-sm text-muted">
+					Claude Code leaves auto-update off for marketplaces that aren't Anthropic's. Enable it to get new versions automatically.
+				</p>
+			</div>
+			<p class="mt-auto break-words rounded-lg border border-line bg-term-bg px-4 py-3 font-mono text-sm text-term-fg">{AUTOUPDATE_PATH}</p>
+		</li>
+	</ol>
+</section>

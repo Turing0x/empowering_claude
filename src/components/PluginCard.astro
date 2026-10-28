@@ -1,0 +1,63 @@
+---
+import type { Plugin } from '../data/plugins';
+import CopyCommand from './CopyCommand.astro';
+import TerminalMock from './TerminalMock.astro';
+
+interface Props {
+	plugin: Plugin;
+}
+
+const { plugin } = Astro.props;
+---
+
+<article
+	id={plugin.slug}
+	aria-labelledby={`${plugin.slug}-title`}
+	class="scroll-mt-8 overflow-hidden rounded-2xl border border-line bg-surface"
+>
+	<div class="grid gap-8 p-5 sm:p-8 grid-cols-[minmax(0,1fr)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10 lg:p-10">
+		<div class="flex min-w-0 flex-col">
+			<div class="flex flex-wrap items-center gap-2 text-xs">
+				<span class="rounded-full border border-line bg-surface-2 px-2.5 py-1 font-mono text-muted">v{plugin.version}</span>
+				<span class="rounded-full border border-line px-2.5 py-1 text-muted">{plugin.category}</span>
+			</div>
+			<h3 id={`${plugin.slug}-title`} class="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+				{plugin.name}
+			</h3>
+			<p class="mt-1 text-lg text-accent">{plugin.tagline}</p>
+			<p class="mt-4 text-muted">{plugin.description}</p>
+
+			<ul class="mt-6 space-y-2.5 p-0">
+				{
+					plugin.features.map((f) => (
+						<li class="flex list-none gap-3 text-sm">
+							<svg viewBox="0 0 16 16" width="16" height="16" class="mt-0.5 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+								<path d="m3 8.5 3.2 3L13 4.5"></path>
+							</svg>
+							<span class="min-w-0 break-words">{f}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<div class="flex min-w-0 flex-col gap-6">
+			<TerminalMock mock={plugin.mock} />
+			<div class="space-y-3">
+				<p class="m-0 text-sm font-medium">Install</p>
+				<CopyCommand command={plugin.installCmd} label={`Copy install command for ${plugin.name}`} />
+				<p class="m-0 text-xs text-muted">Needs the marketplace added first (see below).</p>
+				<a
+					href={plugin.sourceUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-1.5 text-sm font-medium text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent"
+				>
+					View source on GitHub
+					<span aria-hidden="true">↗</span>
+					<span class="sr-only">(opens in a new tab)</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</article>

@@ -1,0 +1,19 @@
+{
+  "name": "empowering-claude",
+  "owner": {
+    "name": "Turing0x",
+    "url": "https://github.com/Turing0x"
+  },
+  "metadata": {
+    "description": "Claude Code plugins and mods by Turing0x: Git Branch, the current branch always visible in the prompt footer."
+  },
+  "plugins": [
+    {
+      "name": "git-branch",
+      "source": "./plugins/git-branch",
+      "description": "The current git branch, always visible in the prompt footer.",
+      "version": "0.1.0",
+      "category": "productivity"
+    }
+  ]
+}

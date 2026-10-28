@@ -1,0 +1,106 @@
+---
+import type { TerminalMock } from '../data/plugins';
+
+interface Props {
+	mock: TerminalMock;
+}
+
+const { mock } = Astro.props;
+const first = mock.frames[0]?.segments ?? [];
+---
+
+<figure class="m-0">
+	<div
+		role="img"
+		aria-label={mock.ariaLabel}
+		class="overflow-hidden rounded-xl border border-term-line bg-term-bg font-mono text-[13px] leading-relaxed text-term-fg shadow-[0_24px_60px_-24px_rgba(0,0,0,0.6)]"
+	>
+		<div class="flex items-center gap-2 border-b border-term-line px-4 py-2.5" aria-hidden="true">
+			<span class="size-2.5 rounded-full bg-[#4a423a]"></span>
+			<span class="size-2.5 rounded-full bg-[#4a423a]"></span>
+			<span class="size-2.5 rounded-full bg-[#4a423a]"></span>
+			<span class="ml-2 truncate text-xs text-term-dim">{mock.title}</span>
+		</div>
+		<div class="space-y-2 px-4 pt-4 pb-3" aria-hidden="true">
+			{
+				mock.lines.map((l) => (
+					<p class="m-0 flex gap-2 break-words">
+						<span class={l.role === 'user' ? 'text-term-dim' : 'text-term-accent'}>
+							{l.role === 'user' ? '>' : '●'}
+						</span>
+						<span class={l.role === 'user' ? 'text-term-dim' : ''}>{l.text}</span>
+					</p>
+				))
+			}
+			<div class="mt-3 rounded-md border border-term-line px-3 py-2">
+				<span class="text-term-dim">&gt; </span><span class="text-term-dim">{mock.prompt}</span><span
+					class="cursor ml-px inline-block h-[1.1em] w-[0.55ch] translate-y-[0.2em] bg-term-fg"></span
+				>
+			</div>
+			<div class="flex items-center justify-between gap-4 px-1 text-xs text-term-dim">
+				<span class="truncate">{mock.hint}</span>
+				<span class="mock-frame shrink-0 whitespace-nowrap transition-opacity duration-200" data-frames={JSON.stringify(mock.frames)}>
+					{first.map((s) => <span data-tone={s.tone}>{s.text}</span>)}
+				</span>
+			</div>
+		</div>
+	</div>
+</figure>
+
+<style>
+	.cursor {
+		animation: blink 1.1s steps(1) infinite;
+	}
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+</style>
+
+<style is:global>
+	.mock-frame [data-tone='success'] {
+		color: var(--term-green);
+	}
+	.mock-frame [data-tone='accent'] {
+		color: var(--term-accent);
+	}
+	.mock-frame [data-tone='muted'] {
+		color: var(--term-dim);
+	}
+	.mock-frame [data-tone='default'] {
+		color: var(--term-fg);
+	}
+</style>
+
+<script>
+	type Frame = { segments: { text: string; tone: string }[] };
+	const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if (!reduced) {
+		document.querySelectorAll<HTMLElement>('.mock-frame[data-frames]').forEach((root) => {
+			let frames: Frame[] = [];
+			try {
+				frames = JSON.parse(root.dataset.frames ?? '[]');
+			} catch {
+				return;
+			}
+			if (frames.length < 2) return;
+			let i = 0;
+			window.setInterval(() => {
+				i = (i + 1) % frames.length;
+				root.style.opacity = '0';
+				window.setTimeout(() => {
+					root.replaceChildren(
+						...frames[i].segments.map((s) => {
+							const el = document.createElement('span');
+							el.dataset.tone = s.tone;
+							el.textContent = s.text;
+							return el;
+						}),
+					);
+					root.style.opacity = '1';
+				}, 220);
+			}, 3000);
+		});
+	}
+</script>
