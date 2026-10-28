@@ -1,13 +1,14 @@
 ---
-import { AUTOUPDATE_PATH, MARKETPLACE_CMD, plugins } from '../data/plugins';
+import { AUTOUPDATE_PATH, MARKETPLACE_CMD, items } from '../data/plugins';
 import CopyCommand from './CopyCommand.astro';
 
-const example = plugins[0];
+const example = items.find((i) => i.install.type === 'marketplace');
+const exampleCmd = example?.install.type === 'marketplace' ? example.install.cmd : undefined;
 ---
 
 <section id="install" aria-labelledby="install-title" class="scroll-mt-8">
-	<h2 id="install-title" class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">How to install</h2>
-	<p class="mt-3 max-w-2xl text-muted">Three steps, all inside Claude Code.</p>
+	<h2 id="install-title" class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">How to install plugins</h2>
+	<p class="mt-3 max-w-2xl text-muted">Plugins from the marketplace install in three steps, all inside Claude Code. Standalone tools carry their own install steps in their card.</p>
 
 	<ol class="mt-8 grid grid-cols-[minmax(0,1fr)] gap-4 p-0 lg:grid-cols-[repeat(3,minmax(0,1fr))]">
 		<li class="flex min-w-0 list-none flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
@@ -24,7 +25,7 @@ const example = plugins[0];
 				<h3 class="mt-1 font-display text-xl font-semibold">Install a plugin</h3>
 				<p class="mt-2 text-sm text-muted">Pick any plugin from the list above. The command is always <code class="font-mono text-xs break-all">name@empowering-claude</code>.</p>
 			</div>
-			{example && <CopyCommand class="mt-auto" command={example.installCmd} label={`Copy install command for ${example.name}`} />}
+			{example && exampleCmd && <CopyCommand class="mt-auto" command={exampleCmd} label={`Copy install command for ${example.name}`} />}
 		</li>
 		<li class="flex min-w-0 list-none flex-col gap-4 rounded-2xl border border-line bg-surface p-5">
 			<div>
